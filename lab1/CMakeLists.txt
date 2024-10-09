@@ -8,5 +8,9 @@ add_executable(lab1 main.cpp
         iolib/io.h
         errlib/errors.h
         errlib/error_handlers.cpp
-        errlib/error_handlers.h)
+        errlib/error_handlers.h
+        multitasking/child.cpp
+        multitasking/child.h
+        multitasking/parent.cpp
+        multitasking/parent.h)
 
