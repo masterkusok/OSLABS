@@ -3,9 +3,11 @@
 
 typedef enum {
     STATE_OK,
-    ERROR_CANT_OPEN_FILE,
     ERROR_CANT_WRITE_FILE,
+    ERROR_PIPE_FAILED,
     ERROR_FORK_FAILED,
+    ERROR_INVALID_INPUT,
+    ERROR_STOP_FAILED,
 } error;
 
 #endif

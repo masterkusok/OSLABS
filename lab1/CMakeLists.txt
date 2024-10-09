@@ -4,8 +4,9 @@ project(lab1)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(lab1 main.cpp
-        iolib/std.cpp
-        iolib/std.h
+        iolib/io.cpp
+        iolib/io.h
         errlib/errors.h
         errlib/error_handlers.cpp
         errlib/error_handlers.h)
+
