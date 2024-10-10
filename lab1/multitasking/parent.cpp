@@ -41,13 +41,11 @@ error parent_process() {
 
     int pipe1_fd[2], pipe2_fd[2];
     if (pipe(pipe1_fd) == -1 || pipe(pipe2_fd) == -1) {
-        perror("Error creating pipes");
         return ERROR_PIPE_FAILED;
     }
 
     pid_t pid1 = fork();
     if (pid1 == -1) {
-        perror("Error forking first child");
         return ERROR_FORK_FAILED;
     }
     if (pid1 == 0) {
@@ -57,7 +55,6 @@ error parent_process() {
 
     pid_t pid2 = fork();
     if (pid2 == -1) {
-        perror("Error forking second child");
         return ERROR_FORK_FAILED;
     }
     if (pid2 == 0) {
