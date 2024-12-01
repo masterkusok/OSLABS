@@ -1,0 +1,11 @@
+ninja_dyndep_version = 1.0
+build CMakeFiles/lab1.dir/main.cpp.o: dyndep
+
+build CMakeFiles/lab1.dir/iolib/io.cpp.o: dyndep
+
+build CMakeFiles/lab1.dir/errlib/error_handlers.cpp.o: dyndep
+
+build CMakeFiles/lab1.dir/multitasking/child.cpp.o: dyndep
+
+build CMakeFiles/lab1.dir/multitasking/parent.cpp.o: dyndep
+

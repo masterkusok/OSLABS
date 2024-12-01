@@ -1,0 +1,18 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "GNU",
+	"compiler-id" : "GNU",
+	"compiler-simulate-id" : "",
+	"config" : "Debug",
+	"cxx-modules" : {},
+	"dir-cur-bld" : "/home/fedor/CODE/CPP/oslabs/lab3/cmake-build-debug",
+	"dir-cur-src" : "/home/fedor/CODE/CPP/oslabs/lab3",
+	"dir-top-bld" : "/home/fedor/CODE/CPP/oslabs/lab3/cmake-build-debug",
+	"dir-top-src" : "/home/fedor/CODE/CPP/oslabs/lab3",
+	"exports" : [],
+	"forward-modules-from-target-dirs" : [],
+	"include-dirs" : [],
+	"language" : "CXX",
+	"linked-target-dirs" : [],
+	"module-dir" : "/home/fedor/CODE/CPP/oslabs/lab3/cmake-build-debug/CMakeFiles/lab1.dir"
+}

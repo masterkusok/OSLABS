@@ -1,0 +1,11 @@
+{
+"rules": [
+{
+"primary-output": "CMakeFiles/lab1.dir/multitasking/child.cpp.o",
+"requires": [
+]
+}
+],
+"version": 0,
+"revision": 0
+}

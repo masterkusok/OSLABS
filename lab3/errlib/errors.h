@@ -1,0 +1,13 @@
+#ifndef LAB1_ERRORS_H
+#define LAB1_ERRORS_H
+
+typedef enum {
+    STATE_OK,
+    ERROR_CANT_WRITE_FILE,
+    ERROR_PIPE_FAILED,
+    ERROR_FORK_FAILED,
+    ERROR_INVALID_INPUT,
+    ERROR_STOP_FAILED,
+} error;
+
+#endif

@@ -9,26 +9,34 @@ void invert_string(std::string* s) {
     }
 }
 
-void child_process(int read_pipe_fd, const std::string& file_name) {
+sem_t child_process(char* shm, sem_t* sem_parent_ready, sem_t* sem_child_ready, const std::string& file_name) {
     int write_fd = open(file_name.c_str(), O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
     if (write_fd == -1) {
         log_stderr("Error opening file in child process");
         exit(1);
     }
-    
+
     std::string buffer;
-    int bytes = file_scan(read_pipe_fd, &buffer);
-    while (bytes > 0 && buffer != "STOP\n") {
+
+    while (true) {
+        sem_wait(sem_parent_ready);
+        buffer = std::string(shm);
+
+        if (buffer == "STOP\n") {
+            break;
+        }
+
         buffer.erase(buffer.size() - 1);
         invert_string(&buffer);
+
         if (file_print(write_fd, buffer + "\n") == -1) {
             log_stderr("Error writing to file");
             exit(1);
         }
-        bytes = file_scan(read_pipe_fd, &buffer);
+
+        sem_post(sem_child_ready);
     }
 
-    close(read_pipe_fd);
     close(write_fd);
     exit(0);
 }

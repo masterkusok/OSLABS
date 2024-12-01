@@ -20,13 +20,13 @@ error parent_loop(int write_pipe_fd1, int write_pipe_fd2) {
 
 error parent_process() {
     std::srand(std::time(nullptr));
-
     std::string file1_name, file2_name;
 
     int bytes = file_scan(STDIN_FILENO, &file1_name);
     if (bytes <= 1) {
         return ERROR_INVALID_INPUT;
     }
+
     file1_name.erase(file1_name.length() - 1);
 
     bytes = file_scan(STDIN_FILENO, &file2_name);
