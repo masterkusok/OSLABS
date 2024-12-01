@@ -1,0 +1,3 @@
+/home/fedor/CODE/CPP/oslabs/lab2/src/cmake-build-debug/CMakeFiles/src.dir
+/home/fedor/CODE/CPP/oslabs/lab2/src/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/fedor/CODE/CPP/oslabs/lab2/src/cmake-build-debug/CMakeFiles/rebuild_cache.dir
