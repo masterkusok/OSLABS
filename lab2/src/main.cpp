@@ -1,6 +1,7 @@
 #include <vector>
 #include <pthread.h>
 #include <semaphore.h>
+#include <sys/time.h>
 #include "iolib/std.h"
 
 struct ThreadData
@@ -37,12 +38,10 @@ void *thread_function(void *arg)
     {
         for (int i = 0; i <= std::min(k - 1, n - j - k - 1); ++i)
         {
-            sem_wait(&semaphore);
             if (std::floor((i + j) / (p * 2)) == std::floor((i + j + k) / (p * 2)))
             {
                 compare_and_exchange(sequence[i + j], sequence[i + j + k]);
             }
-            sem_post(&semaphore);
         }
     }
 
@@ -75,29 +74,44 @@ void betcher_sort(std::vector<int> &v, int max_threads)
 
 int main(int argc, char **argv)
 {
-    if (argc != 2)
+    if (argc != 3)
     {
-        std_out("invalid numer of args. enter max number of threads\n");
+        std_out("invalid numer of args. enter max number of threads and array len\n");
         return 1;
     }
     int max_threads = atoi(argv[1]);
-    std::string buffer;
-    std_in(&buffer);
-    int len = atoi(buffer.c_str());
+    int len = atoi(argv[2]);
 
+    std::srand(std::time(0));
+
+    std::string buffer;
     std::vector<int> unsorted_vector(len);
+
     for (int i = 0; i < len; i++)
     {
-        buffer.clear();
-        std_in(&buffer);
-        unsorted_vector[i] = atoi(buffer.c_str());
+        unsorted_vector[i] = std::rand() % len;
     }
-    sem_init(&semaphore, 0, 4);
-    betcher_sort(unsorted_vector, 4);
+    std_out("Unsorted array:\n");
     for (int i = 0; i < len; i++)
     {
         std_out(std::to_string(unsorted_vector[i]) + " ");
     }
+    std_out("\nSorted array:\n");
+    sem_init(&semaphore, 0, max_threads);
+
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
+    betcher_sort(unsorted_vector, max_threads);
+    gettimeofday(&end, NULL);
+    double time_spent = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1e6;
+
+    for (int i = 0; i < len; i++)
+    {
+        std_out(std::to_string(unsorted_vector[i]) + " ");
+    }
+    std_out("\n");
+    std_out("Time elapsed:" + std::to_string(time_spent) + " s\n");
+
     sem_destroy(&semaphore);
     return 0;
 }
