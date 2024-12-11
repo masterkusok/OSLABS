@@ -3,6 +3,7 @@
 
 #include <string>
 #include <csignal>
+#include <unistd.h>
 
 #define DEFAULT_BUFF_SIZE 1024
 
