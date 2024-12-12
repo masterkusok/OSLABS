@@ -1,8 +1,11 @@
 #include <vector>
 #include <pthread.h>
-#include <semaphore.h>
+#include <mutex>
+#include <cmath>
 #include <sys/time.h>
 #include "iolib/std.h"
+
+pthread_mutex_t mutex;
 
 struct ThreadData
 {
@@ -13,8 +16,6 @@ struct ThreadData
     int threadId;
     int numThreads;
 };
-
-sem_t semaphore;
 
 void compare_and_exchange(int &a, int &b)
 {
@@ -40,7 +41,9 @@ void *thread_function(void *arg)
         {
             if (std::floor((i + j) / (p * 2)) == std::floor((i + j + k) / (p * 2)))
             {
+                // pthread_mutex_lock(&mutex);
                 compare_and_exchange(sequence[i + j], sequence[i + j + k]);
+                // pthread_mutex_unlock(&mutex);
             }
         }
     }
@@ -97,9 +100,9 @@ int main(int argc, char **argv)
         std_out(std::to_string(unsorted_vector[i]) + " ");
     }
     std_out("\nSorted array:\n");
-    sem_init(&semaphore, 0, max_threads);
 
     struct timeval start, end;
+    pthread_mutex_init(&mutex, NULL);
     gettimeofday(&start, NULL);
     betcher_sort(unsorted_vector, max_threads);
     gettimeofday(&end, NULL);
@@ -111,7 +114,6 @@ int main(int argc, char **argv)
     }
     std_out("\n");
     std_out("Time elapsed:" + std::to_string(time_spent) + " s\n");
-
-    sem_destroy(&semaphore);
+    pthread_mutex_destroy(&mutex);
     return 0;
 }
