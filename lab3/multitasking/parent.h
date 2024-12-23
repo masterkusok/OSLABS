@@ -9,7 +9,7 @@
 #include <ctime>
 #include <sys/wait.h>
 #include <cstdlib>
-#include <semaphore>
+#include <semaphore.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <fcntl.h>

@@ -2,7 +2,7 @@
 #define LAB1_CHILD_H
 
 #include <string>
-#include <semaphore>
+#include <semaphore.h>
 #include <string>
 #include <fcntl.h>
 #include <unistd.h>
