@@ -110,7 +110,7 @@ int main(int argc, char **argv) {
         }
     }
 
-    size_t memory_size = 1024 * 1024 * 10; // 10MB
+    size_t memory_size = 1024 * 1024 * 10;
     void *memory = mmap(NULL, memory_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
     if (memory == MAP_FAILED) {
         perror("mmap failed");
