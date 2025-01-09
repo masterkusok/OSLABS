@@ -41,9 +41,9 @@ void *thread_function(void *arg)
         {
             if (std::floor((i + j) / (p * 2)) == std::floor((i + j + k) / (p * 2)))
             {
-                // pthread_mutex_lock(&mutex);
+                pthread_mutex_lock(&mutex);
                 compare_and_exchange(sequence[i + j], sequence[i + j + k]);
-                // pthread_mutex_unlock(&mutex);
+                pthread_mutex_unlock(&mutex);
             }
         }
     }

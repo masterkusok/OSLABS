@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <math.h>
 
-#define MAX_CLASSES 10
 #define PAGE_SIZE 4096
 
 typedef struct Block {
@@ -11,19 +11,19 @@ typedef struct Block {
 } Block;
 
 typedef struct Allocator {
-    Block* free_list[MAX_CLASSES];
-    size_t class_sizes[MAX_CLASSES];
+    Block* free_list[32];
     void* memory_start;
     size_t memory_size;
 } Allocator;
 
-static size_t find_class(size_t size, size_t* class_sizes, size_t num_classes) {
-    for (size_t i = 0; i < num_classes; i++) {
-        if (size <= class_sizes[i]) {
-            return i;
-        }
-    }
-    return num_classes;
+static size_t next_power_of_two(size_t size) {
+    size--;
+    size |= size >> 1;
+    size |= size >> 2;
+    size |= size >> 4;
+    size |= size >> 8;
+    size |= size >> 16;
+    return size + 1;
 }
 
 Allocator* allocator_create(void* const memory, const size_t size) {
@@ -33,33 +33,31 @@ Allocator* allocator_create(void* const memory, const size_t size) {
     allocator->memory_start = (char*)memory + sizeof(Allocator);
     allocator->memory_size = size - sizeof(Allocator);
 
-    size_t block_size = 16;
-    for (size_t i = 0; i < MAX_CLASSES; i++) {
-        allocator->class_sizes[i] = block_size;
+    for (size_t i = 0; i < 32; i++) {
         allocator->free_list[i] = NULL;
-        block_size *= 2;
     }
 
     return allocator;
 }
 
 void allocator_destroy(Allocator* const allocator) {
-    for (size_t i = 0; i < MAX_CLASSES; i++) {
+    for (size_t i = 0; i < 32; i++) {
         allocator->free_list[i] = NULL;
     }
 }
 
 void* allocator_alloc(Allocator* const allocator, const size_t size) {
-    size_t class_index = find_class(size, allocator->class_sizes, MAX_CLASSES);
-    if (class_index >= MAX_CLASSES) return NULL;
+    size_t block_size = next_power_of_two(size);
+    size_t index = (size_t)log2(block_size);
 
-    Block* block = allocator->free_list[class_index];
+    if (index >= 32) return NULL;
+
+    Block* block = allocator->free_list[index];
     if (block) {
-        allocator->free_list[class_index] = block->next;
+        allocator->free_list[index] = block->next;
         return (void*)block;
     }
 
-    size_t block_size = allocator->class_sizes[class_index];
     if (allocator->memory_size < block_size) return NULL;
 
     void* memory = allocator->memory_start;
@@ -71,21 +69,12 @@ void* allocator_alloc(Allocator* const allocator, const size_t size) {
 void allocator_free(Allocator* const allocator, void* const memory) {
     if (!memory) return;
 
-    uintptr_t addr = (uintptr_t)memory - (uintptr_t)allocator;
-    if (addr >= allocator->memory_size) return;
+    size_t block_size = next_power_of_two((uintptr_t)memory - (uintptr_t)allocator);
+    size_t index = (size_t)log2(block_size);
 
-    size_t class_index = 0;
-    size_t block_size = 0;
-    for (; class_index < MAX_CLASSES; class_index++) {
-        block_size = allocator->class_sizes[class_index];
-        if ((uintptr_t)memory % block_size == 0) {
-            break;
-        }
-    }
-
-    if (class_index >= MAX_CLASSES) return;
+    if (index >= 32) return;
 
     Block* block = (Block*)memory;
-    block->next = allocator->free_list[class_index];
-    allocator->free_list[class_index] = block;
+    block->next = allocator->free_list[index];
+    allocator->free_list[index] = block;
 }
